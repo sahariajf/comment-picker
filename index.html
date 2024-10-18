@@ -128,10 +128,11 @@
                 name: selectedItem.name,
                 commentLink: selectedItem.commentLink
             });
-
-            displayItems();
+            setTimeout(closeSpinner, 1500);
+            setTimeout(displayItems, 2000);
+            // displayItems();
             document.getElementById('download').disabled = false;
-            closeSpinner();
+            
         }
 
         function showSpinner() {
