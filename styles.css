@@ -83,11 +83,13 @@ button:hover:not(:disabled) {
     border: 1px solid #074c52;
     padding: 15px;
     margin-bottom: 10px;
+    margin-left: 5rem;
+    margin-right: 5rem;
     border-radius: 7px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     overflow: hidden;
 }
