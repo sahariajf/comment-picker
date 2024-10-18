@@ -29,6 +29,7 @@ h1 {
 
 
 
+
 .center {
     text-align: center;
     margin-top: 30px;
@@ -180,3 +181,16 @@ button:hover:not(:disabled) {
     z-index: 999;
 }
 
+#gif-container {
+    position: fixed; /* Use fixed positioning to keep it centered during scrolling */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for the image's dimensions */
+    z-index: 1100; /* Ensure it's on top of other content */
+    display: none; /* Hide it initially */
+}
+
+#loading-gif {
+    width: 500px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+}

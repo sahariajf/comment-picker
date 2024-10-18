@@ -29,12 +29,15 @@
         <button id="load-more" disabled>Pick A Name</button>
         <button id="download" disabled>Download Excel</button>
     </div>
-
+    
+    <div id="gif-container" style="display: none;">
+        <img id="loading-gif" src="celebration.gif" alt="Loading..." />
+    </div>
     <div id="names"></div>
 
     <div id="overlay"></div>
     <div id="modal">
-        <h1 id="spinner-name">Spinning...</h1>
+        <h2 id="spinner-name">Spinning...</h2>
     </div>
 
     <script>
@@ -73,8 +76,8 @@
                 document.getElementById('spinner-name').textContent = data[randomIndex].name;
             }, 100);
 
-            // Stop spinner automatically after a random time between 3 to 7 seconds
-            const stopTime = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+            // Stop spinner automatically after a random time between 4 to 7 seconds
+            const stopTime = Math.floor(Math.random() * (8000 - 3000 + 1)) + 3000;
             setTimeout(stopSpinner, stopTime);
         });
 
@@ -92,9 +95,20 @@
                 name: selectedItem.name,
                 commentLink: selectedItem.commentLink
             });
-            setTimeout(closeSpinner, 1500);
-            setTimeout(displayItems, 2000);
-            // displayItems();
+
+            const gifContainer = document.getElementById('gif-container');
+    gifContainer.style.display = 'block'; 
+
+    setTimeout(() => {
+        closeSpinner();
+        gifContainer.style.display = 'none'; 
+    }, 3000);
+
+    setTimeout(() => {
+        displayItems();
+        gifContainer.style.display = 'none'; 
+    }, 3200);
+           
             document.getElementById('download').disabled = false;
             
         }
@@ -140,7 +154,7 @@
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "RandomNames");
 
-            XLSX.writeFile(workbook, 'random_names.xlsx');
+            XLSX.writeFile(workbook, 'winners.xlsx');
         });
     </script>
 
