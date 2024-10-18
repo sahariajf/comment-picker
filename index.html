@@ -1,18 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Name Loader</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        .center {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        #modal h1 {
+            margin-bottom: 15px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="center">
         <label for="upload" class="upload-btn">Select file</label>
         <input type="file" id="upload" style="display: none;" />
-        <p id="file-name" style="margin-top: 15px; font-size: 20px; color: #825555;"></p>
+        <p id="file-name" style="font-weight: bold; margin-top: 15px; font-size: 25px; color: #825555;"></p>
         <script>
             document.getElementById('upload').addEventListener('change', function(event) {
                 const fileInput = event.target;
@@ -22,32 +60,39 @@
                 document.getElementById('file-name').textContent = fileName;
             });
         </script>
+
+
+        <button id="load-more" disabled>Pick A Name</button>
+        <button id="download" disabled>Download Excel</button>
     </div>
-    <button id="load-more" disabled>Pick A Name</button>
-    <button id="download" disabled>Download Excel</button>
-    
+
     <div id="names"></div>
+
+    <div id="overlay"></div>
+    <div id="modal">
+        <h1 id="spinner-name">Spinning...</h1>
+    </div>
 
     <script>
         let data = [];
         let displayedData = [];
+        let spinnerInterval; 
 
-        document.getElementById('upload').addEventListener('change', function(event) {
+        document.getElementById('upload').addEventListener('change', function (event) {
             const file = event.target.files[0];
             const reader = new FileReader();
-            
-            reader.onload = function(e) {
+
+            reader.onload = function (e) {
                 const dataArray = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(dataArray, { type: 'array' });
-                const sheetName = workbook.SheetNames[0]; // Assume first sheet
+                const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
                 const jsonSheet = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-                // Get names from column A and comments from column B
                 data = jsonSheet.map((row) => ({
-                    name: row[0],      // Name from column A
-                    commentLink: row[1]  // Comment link from column B
-                })).filter(row => row.name); // Ensure non-empty names
+                    name: row[0],
+                    commentLink: row[1]
+                })).filter(row => row.name);
 
                 document.getElementById('load-more').disabled = false;
             };
@@ -55,65 +100,81 @@
             reader.readAsArrayBuffer(file);
         });
 
-        document.getElementById('load-more').addEventListener('click', function() {
+        document.getElementById('load-more').addEventListener('click', function () {
             if (data.length === 0) return;
+            showSpinner();
 
-            const randomIndex = Math.floor(Math.random() * data.length);
-            const randomItem = data[randomIndex];
+            spinnerInterval = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * data.length);
+                document.getElementById('spinner-name').textContent = data[randomIndex].name;
+            }, 100);
 
-            // Remove the randomly selected item from the data array
-            data.splice(randomIndex, 1);
+            // Stop spinner automatically after a random time between 3 to 7 seconds
+            const stopTime = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+            setTimeout(stopSpinner, stopTime);
+        });
 
-            // Add the selected item to the displayedData array
-            displayedData.push({ 
-                serial: displayedData.length + 1, // Set serial number dynamically
-                name: randomItem.name, 
-                commentLink: randomItem.commentLink 
+        function stopSpinner() {
+            clearInterval(spinnerInterval);
+
+            const finalName = document.getElementById('spinner-name').textContent;
+
+            const selectedItem = data.find(item => item.name === finalName);
+            const index = data.indexOf(selectedItem);
+            if (index !== -1) data.splice(index, 1);
+
+            displayedData.push({
+                serial: displayedData.length + 1,
+                name: selectedItem.name,
+                commentLink: selectedItem.commentLink
             });
 
             displayItems();
-
             document.getElementById('download').disabled = false;
-        });
+            closeSpinner();
+        }
+
+        function showSpinner() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeSpinner() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('modal').style.display = 'none';
+        }
 
         function displayItems() {
-            // Clear the current display
             document.getElementById('names').innerHTML = '';
 
-            // Display each item with the updated serial numbers
             displayedData.forEach((item, index) => {
-                item.serial = index + 1; // Recalculate serial number
+                item.serial = index + 1;
                 const nameDiv = document.createElement('div');
                 nameDiv.innerHTML = `
-                    ${item.serial}. ${item.name} - <a href="${item.commentLink}" target="_blank">Comment Link</a>
+                    ${item.serial}. ${item.name} - 
+                    <a href="${item.commentLink}" target="_blank">Comment Link</a>
                     <button onclick="deleteItem(${index})">Delete</button>`;
                 document.getElementById('names').appendChild(nameDiv);
             });
         }
 
-        window.deleteItem = function(index) {
-            // Remove the item from displayedData based on index
+        window.deleteItem = function (index) {
             displayedData.splice(index, 1);
-
-            // Update the display after deletion
             displayItems();
 
-            // Disable download button if no items are displayed
             if (displayedData.length === 0) {
                 document.getElementById('download').disabled = true;
             }
         };
 
-        document.getElementById('download').addEventListener('click', function() {
+        document.getElementById('download').addEventListener('click', function () {
             if (displayedData.length === 0) return;
 
-            // Convert displayedData to Excel-compatible format
             const worksheetData = displayedData.map(item => [item.serial, item.name, item.commentLink]);
             const worksheet = XLSX.utils.aoa_to_sheet([['Serial', 'Name', 'Comment Link'], ...worksheetData]);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "RandomNames");
 
-            // Download the Excel file
             XLSX.writeFile(workbook, 'random_names.xlsx');
         });
     </script>
