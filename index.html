@@ -16,10 +16,10 @@
         <input type="file" id="upload" style="display: none;" />
         <p id="file-name" style="font-weight: bold; margin-top: 15px; font-size: 25px; color: #030303;"></p>
         <script>
-            document.getElementById('upload').addEventListener('change', function(event) {
+            document.getElementById('upload').addEventListener('change', function (event) {
                 const fileInput = event.target;
                 const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file chosen";
-                
+
                 // Display the file name in the paragraph
                 document.getElementById('file-name').textContent = fileName;
             });
@@ -29,7 +29,7 @@
         <button id="load-more" disabled>Pick A Name</button>
         <button id="download" disabled>Download Excel</button>
     </div>
-    
+
     <div id="gif-container" style="display: none;">
         <img id="loading-gif" src="celebration.gif" alt="Loading..." />
     </div>
@@ -43,7 +43,7 @@
     <script>
         let data = [];
         let displayedData = [];
-        let spinnerInterval; 
+        let spinnerInterval;
 
         document.getElementById('upload').addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -95,22 +95,28 @@
                 name: selectedItem.name,
                 commentLink: selectedItem.commentLink
             });
-
+            const modal = document.getElementById('modal');
             const gifContainer = document.getElementById('gif-container');
-    gifContainer.style.display = 'block'; 
+            gifContainer.style.display = 'block';
+            modal.style.backgroundColor = 'green';
+            modal.style.color = 'white'; // This sets the text color to white
 
-    setTimeout(() => {
-        closeSpinner();
-        gifContainer.style.display = 'none'; 
-    }, 2500);
 
-    setTimeout(() => {
-        displayItems();
-        gifContainer.style.display = 'none'; 
-    }, 3000);
-           
+            setTimeout(() => {
+                closeSpinner();
+                gifContainer.style.display = 'none';
+
+            }, 2500);
+
+            setTimeout(() => {
+                displayItems();
+                gifContainer.style.display = 'none';
+            }, 3000);
+
+
             document.getElementById('download').disabled = false;
-            
+
+
         }
 
         function showSpinner() {
@@ -159,4 +165,5 @@
     </script>
 
 </body>
+
 </html>
