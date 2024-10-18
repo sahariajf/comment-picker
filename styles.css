@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* input[type="file"] {
+    margin-bottom: 20px;
+    display: block;
+    font-size: 16px;
+} */
+
+.center {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.upload-btn {
+    background-color: #e53935;
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 25px;
+    font-size: 20px;
+    cursor: pointer;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #d32f2f;
+}
+
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+#names {
+    margin-top: 20px;
+}
+
+#names div {
+    background-color: #fff;
+    border: 1px solid #074c52;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#names div:nth-child(odd) {
+    background-color: #faf7f5;
+}
+
+#names div:nth-child(even) {
+    background-color: #EBF5EE;
+}
+
+#names a {
+    color: #007bff;
+    text-decoration: none;
+    text-align: center;
+    margin-right: 10px;
+    font-weight: normal;
+}
+
+#names a:hover {
+    text-decoration: underline;
+}
+
+#names button {
+    background-color: #dc3545;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+}
+
+#names button:hover {
+    background-color: #c82333;
+}
+
+#names button:disabled {
+    background-color: #e0a3a3;
+    cursor: not-allowed;
+}
+
+
+
+@media (max-width: 600px) {
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #names div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #names button {
+        margin-top: 10px;
+    }
+}
