@@ -33,6 +33,7 @@
     <div id="gif-container" style="display: none;">
         <img id="loading-gif" src="celebration.gif" alt="Loading..." />
     </div>
+    <audio id="celebrationSound" src="win.wav" preload="auto"></audio>
     <div id="names"></div>
 
     <div id="overlay"></div>
@@ -99,15 +100,17 @@
             const gifContainer = document.getElementById('gif-container');
             gifContainer.style.display = 'block';
             modal.style.backgroundColor = 'green';
-            modal.style.color = 'white'; // This sets the text color to white
+            modal.style.color = 'white';
+            const celebrationSound = document.getElementById('celebrationSound');
+            celebrationSound.play();
 
 
             setTimeout(() => {
                 closeSpinner();
                 gifContainer.style.display = 'none';
                 modal.style.backgroundColor = 'white';
-            modal.style.color = 'black';
-
+                modal.style.color = 'black';
+                celebrationSound.play();
             }, 2500);
 
             setTimeout(() => {
