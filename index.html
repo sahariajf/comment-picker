@@ -180,8 +180,7 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.getWidth(); // Get page width for centering
-
-            // Title centered at the top
+            
             const title = 'Winners List';
             const titleWidth = doc.getTextWidth(title);
             doc.text(title, (pageWidth - titleWidth) / 2, 10);
@@ -190,18 +189,21 @@
                 // Display serial number and name
                 const text = `${item.serial}. ${item.name} - Comment: `;
                 const textWidth = doc.getTextWidth(text);
-                const yPos = 20 + index * 10; // Adjust vertical position
+                const yPos = 20 + index * 10; 
 
-                // Draw text aligned with the comment link
+                doc.setTextColor(0, 0, 0); 
                 doc.text(text, 10, yPos);
 
-                // Add clickable comment link next to the text
+               
+                doc.setTextColor(0, 0, 255); 
                 doc.textWithLink('Click here', 10 + textWidth, yPos, { url: item.commentLink });
             });
 
+         
+            doc.setTextColor(0, 0, 0);
+
             doc.save('winners.pdf');
         });
-
     </script>
 
 </body>
